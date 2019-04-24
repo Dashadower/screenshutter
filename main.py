@@ -1,14 +1,5 @@
 import tkinter as tk, threading
-from ctypes import windll, Structure, c_long, byref
-
-class POINT(Structure):
-    _fields_ = [("x", c_long), ("y", c_long)]
-
-def queryMousePosition():
-    pt = POINT()
-    windll.user32.GetCursorPos(byref(pt))
-    return pt.x, pt.y
-
+from pynput.mouse import Controller
 
 class TransparentWindow(tk.Toplevel):
     """
@@ -49,6 +40,8 @@ class MainWindow(tk.Frame):
 
         self.gapsize = gapsize
 
+        self.mouse_controller = Controller()
+
         self.running = False
         self.stopEvent = threading.Event()
         self.button_text = tk.StringVar()
@@ -58,7 +51,7 @@ class MainWindow(tk.Frame):
 
     def update_windows(self):
         while not self.stopEvent.is_set():
-            mouse_coords = queryMousePosition()
+            mouse_coords = self.mouse_controller.position
             self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize)
             self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize)
 
