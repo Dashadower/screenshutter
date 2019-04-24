@@ -71,7 +71,7 @@ class MainWindow(tk.Frame):
         self.window_bg_btn.grid(row=0, column=1)
 
         self.top_window_opacity_scale = tk.Scale(self, from_=10, to=100, label="opacity", orient=tk.HORIZONTAL,
-                                                 length=200, resolution=10, showvalue=False, tickinterval=10,variable=self.window_opacity, command=self.onOpacityChange)
+                                                 length=200, resolution=10, showvalue=False, tickinterval=10,variable=self.window_opacity, command=self.onConfigureOpacity)
 
         self.top_window_opacity_scale.grid(row=1, column=0, columnspan=2)
 
@@ -80,7 +80,7 @@ class MainWindow(tk.Frame):
                                                  variable=self.gapsize)
         self.window_gap_scale.grid(row=2, column=0, columnspan=2)
 
-    def onOpacityChange(self, event):
+    def onConfigureOpacity(self, event):
         self.top_window.wm_attributes("-alpha", self.window_opacity.get()/100)
         self.bottom_window.wm_attributes("-alpha", self.window_opacity.get()/100)
 
@@ -88,12 +88,14 @@ class MainWindow(tk.Frame):
         _ , hex = askcolor(title=APP_NAME)
         self.window_bg_hex = hex
         self.top_window.configure(background=hex)
-        self.bottom_window.configure(background = hex)
+        self.bottom_window.configure(background=hex)
         self.draw_widgets()
 
     def update_windows(self, stop_event):
         while not stop_event.is_set():
             mouse_coords = self.mouse_controller.position
+            self.top_window.lift()
+            self.bottom_window.lift()
             self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize.get())
             self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize.get())
     
