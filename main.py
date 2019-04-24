@@ -1,4 +1,4 @@
-import tkinter as tk, threading
+import tkinter as tk, threading, time
 from pynput.mouse import Controller
 
 class TransparentWindow(tk.Toplevel):
@@ -11,6 +11,7 @@ class TransparentWindow(tk.Toplevel):
         self.overrideredirect(True)
         self.wm_attributes("-alpha", 0.7)
         self.wm_attributes("-topmost", True)
+        self.lift()
 
     def update_size(self, mouse_ycoords, position="top", gapsize=40):
         if position == "top":
@@ -25,9 +26,11 @@ class TransparentWindow(tk.Toplevel):
             right = self.winfo_screenwidth()
             bottom = self.winfo_screenheight()
 
-        self.geometry("%dx%d+%d+%d"%(right-left, bottom-top, left, top))  # width,height,x_coords,y_coors
+        self.geometry("%dx%d+%d+%d"%(right-left, bottom-top, left, top))  # width,height,x_coords,y_coords
+        self.update()
         self.lift()
 
+        
 class MainWindow(tk.Frame):
     def __init__(self, master, gapsize):
         super(MainWindow, self).__init__(master)
@@ -49,12 +52,12 @@ class MainWindow(tk.Frame):
 
         tk.Button(self, textvariable=self.button_text, command=self.onClick).pack()
 
-    def update_windows(self):
-        while not self.stopEvent.is_set():
+    def update_windows(self, stop_event):
+        while not stop_event.is_set():
             mouse_coords = self.mouse_controller.position
             self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize)
             self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize)
-
+    
     def onClick(self):
         if self.running:
             self.stopEvent.set()
@@ -64,17 +67,22 @@ class MainWindow(tk.Frame):
             self.bottom_window.withdraw()
 
         else:
+            self.stopEvent = threading.Event()
             self.stopEvent.clear()
             self.button_text.set("stop")
             self.running = True
+            
             self.top_window.deiconify()
             self.bottom_window.deiconify()
-            thread = threading.Thread(target=self.update_windows, args=())
+            self.top_window.lift()
+            self.bottom_window.lift()
+            thread = threading.Thread(target=self.update_windows, args=(self.stopEvent,))
             thread.start()
 
 
 if __name__ == '__main__':
     root = tk.Tk()
+    root.title("pyscreenruler")
     root.wm_minsize(width=200, height=1)
     root.wm_attributes("-topmost", True)
     MainWindow(root, gapsize=100)
