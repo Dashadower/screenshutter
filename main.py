@@ -14,7 +14,7 @@ class TransparentWindow(tk.Toplevel):
         self.configure(background=background)
         self.overrideredirect(True)
         self.wm_attributes("-alpha", opacity)
-        self.wm_attributes("-topmost", True)
+        self.wm_attributes("-topmost", "true")
 
         self.lift()
 
