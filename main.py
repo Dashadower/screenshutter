@@ -43,6 +43,8 @@ class MainWindow(tk.Frame):
         self.top_window = TransparentWindow()
         self.top_window.withdraw()
 
+        self.master = master
+
         self.bottom_window = TransparentWindow()
         self.bottom_window.withdraw()
 
@@ -58,6 +60,8 @@ class MainWindow(tk.Frame):
         self.window_opacity = tk.IntVar()
         self.window_opacity.set(70)
         self.window_bg_hex = "#ffffff"
+
+        self.master.protocol("WM_DELETE_WINDOW", self.onClose)
 
         self.draw_widgets()
 
@@ -92,12 +96,12 @@ class MainWindow(tk.Frame):
 
     def update_windows(self):
         mouse_coords = self.mouse_controller.position
-        self.top_window.lift()
-        self.bottom_window.lift()
+        #self.top_window.lift()
+        #self.bottom_window.lift()
         self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize.get())
         self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize.get())
         if self.running:
-            self.after(50, self.update_windows)
+            self.after(20, self.update_windows)
 
     def onStart(self):
         if self.running:
@@ -115,6 +119,9 @@ class MainWindow(tk.Frame):
             self.bottom_window.lift()
             self.after(50, self.update_windows)
 
+    def onClose(self):
+        self.running = False
+        self.master.destroy()
 
 if __name__ == '__main__':
     root = tk.Tk()
