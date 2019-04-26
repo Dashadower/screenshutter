@@ -1,7 +1,8 @@
 import tkinter as tk, threading
 from tkinter.colorchooser import askcolor
 from pynput.mouse import Controller
-
+from os import system
+from platform import system as platform
 APP_NAME = "pyscreenruler"
 
 class TransparentWindow(tk.Toplevel):
@@ -82,6 +83,10 @@ class MainWindow(tk.Frame):
                                                  length=200, resolution=10,
                                                  variable=self.gapsize)
         self.window_gap_scale.grid(row=2, column=0, columnspan=2)
+
+        if platform() == 'Darwin':
+            print("running platform independent code for MacOS")
+            system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
 
     def onConfigureOpacity(self, event):
         self.top_window.wm_attributes("-alpha", self.window_opacity.get()/100)
