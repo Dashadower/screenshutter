@@ -52,7 +52,6 @@ class MainWindow(tk.Frame):
         self.mouse_controller = Controller()
 
         self.running = False
-        self.stopEvent = None
         self.button_text = tk.StringVar()
         self.button_text.set("start")
 
@@ -91,33 +90,30 @@ class MainWindow(tk.Frame):
         self.bottom_window.configure(background=hex)
         self.draw_widgets()
 
-    def update_windows(self, stop_event):
-        while not stop_event.is_set():
-            mouse_coords = self.mouse_controller.position
-            self.top_window.lift()
-            self.bottom_window.lift()
-            self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize.get())
-            self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize.get())
-    
+    def update_windows(self):
+        mouse_coords = self.mouse_controller.position
+        self.top_window.lift()
+        self.bottom_window.lift()
+        self.top_window.update_size(mouse_coords[1], gapsize=self.gapsize.get())
+        self.bottom_window.update_size(mouse_coords[1], position="bottom", gapsize=self.gapsize.get())
+        if self.running:
+            self.after(50, self.update_windows)
+
     def onStart(self):
         if self.running:
-            self.stopEvent.set()
             self.running = False
             self.button_text.set("start")
             self.top_window.withdraw()
             self.bottom_window.withdraw()
 
         else:
-            self.stopEvent = threading.Event()
-            self.stopEvent.clear()
             self.button_text.set("stop")
             self.running = True
             self.top_window.deiconify()
             self.bottom_window.deiconify()
             self.top_window.lift()
             self.bottom_window.lift()
-            thread = threading.Thread(target=self.update_windows, args=(self.stopEvent,))
-            thread.start()
+            self.after(50, self.update_windows)
 
 
 if __name__ == '__main__':
