@@ -11,13 +11,6 @@ class TransparentWindow(tk.Toplevel):
     """
     def __init__(self, background="white", opacity=0.7):
         super(TransparentWindow, self).__init__()
-        #self.master = master
-        """self.configure(background=background)
-        self.overrideredirect(True)
-        self.wm_attributes("-alpha", opacity)
-        self.wm_attributes("-topmost", "true")
-
-        self.lift()"""
         self.configure(background=background)
         self.overrideredirect(True)
         if platform() == 'Darwin':
