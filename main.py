@@ -1,4 +1,4 @@
-import tkinter as tk, threading
+import tkinter as tk
 from tkinter.colorchooser import askcolor
 from pynput.mouse import Controller
 from os import system
@@ -12,12 +12,20 @@ class TransparentWindow(tk.Toplevel):
     def __init__(self, background="white", opacity=0.7):
         super(TransparentWindow, self).__init__()
         #self.master = master
-        self.configure(background=background)
+        """self.configure(background=background)
         self.overrideredirect(True)
         self.wm_attributes("-alpha", opacity)
         self.wm_attributes("-topmost", "true")
 
-        self.lift()
+        self.lift()"""
+        self.configure(background=background)
+        self.overrideredirect(True)
+        if platform() == 'Darwin':
+            # implement https://stackoverflow.com/questions/55868430/tkinter-keeping-window-on-top-all-times-on-macos/55873471#55873471
+            self.overrideredirect(False)
+        self.wm_attributes("-alpha", opacity)
+        self.wm_attributes("-topmost", "true")
+
 
     def update_size(self, mouse_ycoords, position="top", gapsize=40):
         if position == "top":
