@@ -105,6 +105,7 @@ class MainWindow(tk.Frame):
         self.top_window.configure(background=hex)
         self.bottom_window.configure(background=hex)
         self.window_bg_btn.configure(background=hex)
+        self.update()
 
     def update_windows(self):
         mouse_coords = self.mouse_controller.position
