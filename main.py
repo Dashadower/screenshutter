@@ -42,7 +42,6 @@ class TransparentWindow(tk.Toplevel):
 
         self.geometry("%dx%d+%d+%d"%(right-left, bottom-top, left, top))  # width,height,x_coords,y_coords
         self.update()
-        self.lift()
 
         
 class MainWindow(tk.Frame):
@@ -91,10 +90,6 @@ class MainWindow(tk.Frame):
                                                  length=200, resolution=10,
                                                  variable=self.gapsize)
         self.window_gap_scale.grid(row=2, column=0, columnspan=2)
-
-        if platform() == 'Darwin':
-            print("running platform independent code for MacOS")
-            system('''/usr/bin/osascript -e 'tell app "Finder" to set frontmost of process "Python" to true' ''')
 
     def onConfigureOpacity(self, event):
         self.top_window.wm_attributes("-alpha", self.window_opacity.get()/100)
