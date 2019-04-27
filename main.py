@@ -96,7 +96,11 @@ class MainWindow(tk.Frame):
         self.bottom_window.wm_attributes("-alpha", self.window_opacity.get()/100)
 
     def onConfigureColor(self):
+        self.top_window.wm_attributes("-topmost", "false")
+        self.bottom_window.wm_attributes("-topmost", "false")
         _ , hex = askcolor(title=APP_NAME)
+        self.top_window.wm_attributes("-topmost", "true")
+        self.bottom_window.wm_attributes("-topmost", "true")
         self.window_bg_hex = hex
         self.top_window.configure(background=hex)
         self.bottom_window.configure(background=hex)
