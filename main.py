@@ -100,6 +100,7 @@ class MainWindow(tk.Frame):
         self.window_bg_hex = hex
         self.top_window.configure(background=hex)
         self.bottom_window.configure(background=hex)
+        self.window_bg_btn.configure(background=hex)
         self.draw_widgets()
 
     def update_windows(self):
