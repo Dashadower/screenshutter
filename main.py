@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter.colorchooser import askcolor
 from pynput.mouse import Controller
-from os import system
 from platform import system as platform
-APP_NAME = "pyscreenruler"
+APP_NAME = "screenshutter"
 
 class TransparentWindow(tk.Toplevel):
     """
@@ -131,6 +130,7 @@ class MainWindow(tk.Frame):
     def onClose(self):
         self.running = False
         self.master.destroy()
+
 
 if __name__ == '__main__':
     root = tk.Tk()
